@@ -41,25 +41,31 @@ function parse(data) {
 
 function genDrawLine(ctx, x1, y1, x2, y2) {
 
-    return function () {
+    return function (callback) {
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
-        ctx.stroke();
-        console.log('line done.');
+        callback(null, [x1, y1, x2, y2]);
     };
 }
 
-function runTasks(tasks) {
+function runTasks(ctx, tasks) {
     
     var TASK_LIMIT = 1000;
     var INTERVAL_TIME = 500;
     var taskStart = 0;
     
-    setInterval(function() {
-        async.parallel(tasks.slice(taskStart, taskStart + TASK_LIMIT), function() {
-            console.log('done');        
+    var interlvalControll = setInterval(function() {
+        var partialTasks = tasks.slice(taskStart, taskStart + TASK_LIMIT);
+        async.parallel(
+            partialTasks, function(err, results) {
+                console.log('err =', err, ' done.');
+                ctx.stroke();
         });
+        
         taskStart += TASK_LIMIT;
+        if (taskStart > tasks.length) {
+            clearInterval(interlvalControll);
+        }
     }, INTERVAL_TIME);    
     
 }
@@ -70,10 +76,13 @@ function drawAll(line) {
     var OFFSET = 30;
     var SCALE = 10;
 
-    var ctx = $('#myCanvas')[0].getContext('2d'), i;
+    var canvas = $('#myCanvas')[0];
+    var ctx = canvas.getContext('2d');    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
     
     var tasks = [], laserOn = false;
-    var x = -1, y = -1, newX, newY;
+    var i, x = -1, y = -1, newX, newY;
     
     for (i = 0; i < line.length; i ++) {        
         
@@ -92,7 +101,7 @@ function drawAll(line) {
         }
     }
     
-    runTasks(tasks);
+    runTasks(ctx, tasks);
 }
 
 
