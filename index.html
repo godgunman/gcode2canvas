@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+        <script src="run.js"></script>
+        <meta charset="utf-8">
+        <title>JS Bin</title>
+    </head>
+    <body>
+
+        <textarea id="gcodeText" rows="20" cols="20">
+G0 Z8.0 F10000
+G0 X0.5 Y-19.8 F3000
+M03; Laser ON
+G1 X1.5 Y-19.8 F200
+M05; Laser OFF
+G0 X11.1 Y-19.6 F3000
+M03; Laser ON
+G1 X10.3 Y-19.6 F200
+        </textarea>
+
+        <br>
+        <button id="submit" type="button">go</button>
+        <br>
+        <canvas id="myCanvas" width="1000" height="1000">Your browser does not support the HTML5 canvas tag.</canvas>
+
+    </body>
+</html>
+
